@@ -50,5 +50,26 @@ router.get("/:userid/next", (req, res) => {
     res.json(results[0] || null);
   });
 });
+/**
+ * Mark a medicine as taken
+ */
+router.put("/:id/take", (req, res) => {
+  const medicineId = req.params.id;
+
+  const query = `
+    UPDATE medicines
+    SET is_taken = 1
+    WHERE id = ?
+  `;
+
+  connection.query(query, [medicineId], (err, result) => {
+    if (err) {
+      console.error("Take medicine error:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    res.json({ success: true });
+  });
+});
 
 module.exports = router;
