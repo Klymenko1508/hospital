@@ -16,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import Games from "./pages/dashboard/Games";
 import Appointments from "./pages/dashboard/Appointment";
 import Medicines from "./pages/dashboard/Medicines";
+import Learn from "./pages/dashboard/Learn";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -116,6 +117,11 @@ function App() {
             <Route
               path="/map"
               element={isLoggedIn ? <Map /> : <Navigate to="/login" />}
+            />
+
+            <Route
+              path="/learn"
+              element={isLoggedIn ? <Learn /> : <Navigate to="/login" />}
             />
 
             {/* Fallback */}
