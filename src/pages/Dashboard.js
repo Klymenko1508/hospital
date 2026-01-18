@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Dashboard = () => {
   const [userData, setUserData] = useState(null);
@@ -36,11 +37,25 @@ const Dashboard = () => {
       .catch((err) => console.error("Next medicine error:", err));
   }, [userData]);
 
-  // Handle marking medicine as taken
   const handleTakeMedicine = (id) => {
-    fetch(`http://localhost:5001/api/medicines/${id}/take`, { method: "PUT" })
-      .then(() => setNextMedicine(null)) // Refresh tile
-      .catch((err) => console.error(err));
+    if (!userData?.id) return;
+    console.log("Marking medicine as taken:", nextMedicine?.id);
+
+    axios
+      .put(`http://localhost:5001/api/medicines/${id}/take`)
+      .then(() => {
+        // Immediately mark current medicine as taken for instant feedback
+        setNextMedicine((prev) =>
+          prev && prev.id === id ? { ...prev, is_taken: 1 } : prev
+        );
+
+        // Then fetch the next medicine after a short delay (optional)
+        return axios.get(
+          `http://localhost:5001/api/medicines/${userData.id}/next`
+        );
+      })
+      .then((res) => setNextMedicine(res.data))
+      .catch((err) => console.error("Error updating medicine:", err));
   };
 
   if (!userData) return <div className="p-6">Loading...</div>;
@@ -124,6 +139,17 @@ const Dashboard = () => {
                 <>
                   <p className="text-xl font-bold">{nextMedicine.name}</p>
                   <p>⏰ {nextMedicine.time}</p>
+                  <button
+                    onClick={() => handleTakeMedicine(nextMedicine.id)}
+                    disabled={nextMedicine.is_taken}
+                    className={`mt-4 px-4 py-2 rounded-xl text-white font-semibold ${
+                      nextMedicine.is_taken
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-green-500 hover:bg-green-600"
+                    }`}
+                  >
+                    {nextMedicine.is_taken ? "Taken ✅" : "Mark as Taken"}
+                  </button>
                 </>
               ) : (
                 <p className="text-sm text-gray-500">
