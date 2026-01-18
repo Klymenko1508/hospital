@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 05, 2026 at 12:11 PM
+-- Generation Time: Jan 18, 2026 at 01:56 PM
 -- Server version: 8.0.40
 -- PHP Version: 8.3.14
 
@@ -44,9 +44,10 @@ CREATE TABLE `appointments` (
 --
 
 INSERT INTO `appointments` (`id`, `user_id`, `doctor_id`, `department`, `location`, `appointment_date`, `appointment_time`, `description`, `created_at`) VALUES
-(3, 11, 4, 'Children’s Cardiology', 'Building A – Room 203', '2026-01-10', '10:30:00', 'Heart check-up with ultrasound', '2026-01-05 09:17:12'),
-(4, 11, 4, 'Pediatrics', 'Building C – Room 101', '2026-01-15', '14:00:00', 'Regular pediatric follow-up', '2026-01-05 09:17:12'),
-(23, 11, 4, 'Children’s Cardiology', 'Building A – Room 205', '2026-01-10', '10:30:00', 'Heart check-up with ultrasound maybe', '2026-01-05 09:17:12');
+(3, 11, 4, 'Children’s Cardiology', 'Building A – Room 203', '2026-01-20', '10:30:00', 'Heart check-up with ultrasound', '2026-01-05 09:17:12'),
+(4, 11, 4, 'Pediatrics', 'Building C – Room 101', '2026-01-22', '14:00:00', 'Regular pediatric follow-up', '2026-01-05 09:17:12'),
+(23, 11, 7, 'Children’s Cardiology', 'Building A – Room 205', '2026-01-24', '10:30:00', 'Heart check-up with ultrasound maybe', '2026-01-05 09:17:12'),
+(24, 11, 4, 'Children’s Cardiology', 'Building hfcycvhA – Room 205', '2026-01-26', '15:00:00', 'Heart check-up with ultrasound maybe', '2026-01-05 09:17:12');
 
 -- --------------------------------------------------------
 
@@ -72,7 +73,6 @@ INSERT INTO `doctors` (`id`, `name`, `specialty`, `created_at`) VALUES
 (7, 'Dr. Oliver Brown', 'Pediatric Oncology', '2026-01-04 21:20:07'),
 (8, 'Dr. Amelia Green', 'Pediatric Neurology', '2026-01-04 21:20:07'),
 (9, 'Dr. Daniel Lee', 'Pediatric Cardiology', '2026-01-04 21:20:07'),
-(10, 'Dr. Emily Carter', 'Children’s Cardiology', '2026-01-05 09:15:58'),
 (11, 'Dr. John Miller', 'Pediatrics', '2026-01-05 09:15:58');
 
 -- --------------------------------------------------------
@@ -147,9 +147,39 @@ CREATE TABLE `medicines` (
 --
 
 INSERT INTO `medicines` (`id`, `user_id`, `name`, `dosage`, `time`, `start_date`, `end_date`, `is_taken`, `doctor_id`, `created_at`) VALUES
-(1, 11, 'Paracetamol', '500mg', '08:00:00', '2026-01-01', '2026-01-10', 0, 5, '2026-01-04 22:53:58'),
-(2, 11, 'Amoxicillin', '250mg', '12:00:00', '2026-01-01', '2026-01-10', 0, 5, '2026-01-04 22:53:58'),
-(3, 11, 'Ibuprofen', '200mg', '09:00:00', '2026-01-01', '2026-01-05', 0, 6, '2026-01-04 22:53:58');
+(1, 11, 'Paracetamol', '500mg', '23:00:00', '2026-01-18', '2026-02-28', 0, 5, '2026-01-04 22:53:58'),
+(2, 11, 'Amoxicillin', '250mg', '12:00:00', '2026-01-18', '2026-02-28', 0, 5, '2026-01-04 22:53:58'),
+(3, 11, 'Ibuprofen', '200mg', '09:00:00', '2026-02-03', '2026-03-31', 0, 6, '2026-01-04 22:53:58'),
+(4, 11, 'Ibuprofen max', '200mg', '09:00:00', '2026-02-28', '2026-03-31', 0, 5, '2026-01-04 22:53:58');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `moods`
+--
+
+CREATE TABLE `moods` (
+  `id` int NOT NULL,
+  `key_name` varchar(50) NOT NULL,
+  `label` varchar(50) NOT NULL,
+  `emoji_filename` varchar(100) NOT NULL,
+  `color` varchar(50) DEFAULT NULL,
+  `encouragement_title` varchar(100) NOT NULL,
+  `encouragement_text` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `moods`
+--
+
+INSERT INTO `moods` (`id`, `key_name`, `label`, `emoji_filename`, `color`, `encouragement_title`, `encouragement_text`, `created_at`) VALUES
+(1, 'happy', 'Happy', 'beaming.png', 'yellow', 'You’re shining!', 'It’s wonderful to feel happy. Keep smiling!', '2026-01-08 19:18:38'),
+(2, 'silly', 'Silly', 'wink_tongue.png', 'purple', 'That’s fun!', 'Being silly can make the day brighter 😜', '2026-01-08 19:18:38'),
+(3, 'angry', 'Angry', 'steam.png', 'red', 'It’s okay to feel angry', 'Take a deep breath. Big feelings are okay 💛', '2026-01-08 19:18:38'),
+(4, 'confused', 'Confused', 'spiral.png', 'blue', 'You’re not alone', 'Everyone feels confused sometimes. We’ll figure it out together 🤗', '2026-01-08 19:18:38'),
+(5, 'proud', 'Proud', 'halo.png', 'teal', 'You did something great!', 'You should feel proud of yourself ✨', '2026-01-08 19:18:38'),
+(6, 'sad', 'Sad', 'sad.png', 'indigo', 'It’s okay to feel sad', 'Sometimes we feel sad, and that’s okay. You are not alone 💙', '2026-01-08 19:22:01');
 
 -- --------------------------------------------------------
 
@@ -178,6 +208,20 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `firstName`, `surname`, `dob`, `hospital_number`, `email`, `department_id`, `telephone_number`, `password`, `created_at`, `doctor_id`, `location_id`) VALUES
 (11, 'Nataliia', 'Yareshko', '1993-01-19', 'nata', 'n@gmail.com', 1, '777777777', '$2b$10$OUnOunUB/rum5pbiTO4a8Oift0BK8EzaCSrn4/QWj8x7MzazgfJGm', '2025-12-09 21:16:27', 4, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_moods`
+--
+
+CREATE TABLE `user_moods` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `mood_id` int NOT NULL,
+  `mood_date` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Indexes for dumped tables
@@ -218,6 +262,13 @@ ALTER TABLE `medicines`
   ADD KEY `doctor_id` (`doctor_id`);
 
 --
+-- Indexes for table `moods`
+--
+ALTER TABLE `moods`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `key_name` (`key_name`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -227,6 +278,14 @@ ALTER TABLE `users`
   ADD KEY `fk_user_location` (`location_id`);
 
 --
+-- Indexes for table `user_moods`
+--
+ALTER TABLE `user_moods`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_user_mood_per_day` (`user_id`,`mood_date`),
+  ADD KEY `fk_user_moods_mood` (`mood_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -234,7 +293,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `doctors`
@@ -258,13 +317,25 @@ ALTER TABLE `locations`
 -- AUTO_INCREMENT for table `medicines`
 --
 ALTER TABLE `medicines`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `moods`
+--
+ALTER TABLE `moods`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `user_moods`
+--
+ALTER TABLE `user_moods`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -290,6 +361,13 @@ ALTER TABLE `medicines`
 ALTER TABLE `users`
   ADD CONSTRAINT `fk_user_doctor` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`),
   ADD CONSTRAINT `fk_user_location` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`);
+
+--
+-- Constraints for table `user_moods`
+--
+ALTER TABLE `user_moods`
+  ADD CONSTRAINT `fk_user_moods_mood` FOREIGN KEY (`mood_id`) REFERENCES `moods` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_moods_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
