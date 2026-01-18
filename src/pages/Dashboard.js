@@ -3,12 +3,29 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const Dashboard = () => {
+  // ----------------------------
+  // User & Buddy
+  // ----------------------------
   const [userData, setUserData] = useState(null);
   const [buddy, setBuddy] = useState(null);
+
+  // ----------------------------
+  // Appointments & Medicines
+  // ----------------------------
   const [nextAppointment, setNextAppointment] = useState(null);
   const [nextMedicine, setNextMedicine] = useState(null);
 
+  // ----------------------------
+  // MOOD TILE STATE
+  // ----------------------------
+  const [moods, setMoods] = useState([]);
+
+  const [selectedMood, setSelectedMood] = useState(null); // today's selected mood
+  const [moodError, setMoodError] = useState(null); // for catching fetch errors
+
+  // ----------------------------
   // Load user and buddy from localStorage
+  // ----------------------------
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const storedBuddy = localStorage.getItem("buddy");
@@ -17,7 +34,9 @@ const Dashboard = () => {
     if (storedBuddy) setBuddy(JSON.parse(storedBuddy));
   }, []);
 
+  // ----------------------------
   // Fetch next appointment
+  // ----------------------------
   useEffect(() => {
     if (!userData?.id) return;
 
@@ -27,7 +46,9 @@ const Dashboard = () => {
       .catch((err) => console.error("Next appointment error:", err));
   }, [userData]);
 
+  // ----------------------------
   // Fetch next medicine
+  // ----------------------------
   useEffect(() => {
     if (!userData?.id) return;
 
@@ -37,25 +58,87 @@ const Dashboard = () => {
       .catch((err) => console.error("Next medicine error:", err));
   }, [userData]);
 
+  // ----------------------------
+  // Fetch available moods (icons + labels + text)
+  // ----------------------------
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/api/moods")
+      .then((res) => {
+        setMoods(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching moods:", err);
+        setMoodError("Cannot load moods");
+      });
+  }, []);
+
+  // ----------------------------
+  // Fetch today's mood from backend
+  // ----------------------------
+  useEffect(() => {
+    if (!userData?.id) return;
+
+    // defensive: use try/catch to prevent breaking if endpoint 404s
+    axios
+      .get(`http://localhost:5001/api/moods/${userData.id}/today`)
+
+      .then((res) => {
+        if (res.data) {
+          setSelectedMood(res.data); // set today's mood if exists
+        }
+      })
+      .catch((err) => {
+        if (err.response?.status !== 404) {
+          setMoodError("Cannot load today's mood");
+        }
+      });
+  }, [userData]);
+
+  // ----------------------------
+  // Handle taking medicine
+  // ----------------------------
   const handleTakeMedicine = (id) => {
     if (!userData?.id) return;
-    console.log("Marking medicine as taken:", nextMedicine?.id);
 
     axios
       .put(`http://localhost:5001/api/medicines/${id}/take`)
       .then(() => {
-        // Immediately mark current medicine as taken for instant feedback
         setNextMedicine((prev) =>
           prev && prev.id === id ? { ...prev, is_taken: 1 } : prev
         );
-
-        // Then fetch the next medicine after a short delay (optional)
         return axios.get(
           `http://localhost:5001/api/medicines/${userData.id}/next`
         );
       })
       .then((res) => setNextMedicine(res.data))
       .catch((err) => console.error("Error updating medicine:", err));
+  };
+
+  // ----------------------------
+  // Handle selecting mood
+  // ----------------------------
+  const handleSelectMood = async (moodId) => {
+    if (!userData?.id) return;
+
+    try {
+      // 1️⃣ Save mood for today
+      await axios.post(`http://localhost:5001/api/moods/${userData.id}`, {
+        mood_id: moodId,
+      });
+
+      // 2️⃣ Re-fetch today's mood (full data)
+      const res = await axios.get(
+        `http://localhost:5001/api/moods/${userData.id}/today`
+      );
+
+      // 3️⃣ Update UI with complete mood info
+      setSelectedMood(res.data);
+      setMoodError(null);
+    } catch (err) {
+      console.error("Error updating mood:", err);
+      setMoodError("Cannot save mood");
+    }
   };
 
   if (!userData) return <div className="p-6">Loading...</div>;
@@ -168,10 +251,7 @@ const Dashboard = () => {
               {/* MAP TILE */}
               <Link
                 to="/map"
-                className="group bg-gradient-to-br from-purple-400 to-indigo-500
-             rounded-2xl p-5 shadow-lg
-             flex items-center gap-5
-             hover:scale-[1.04] transition-transform"
+                className="group bg-gradient-to-br from-purple-400 to-indigo-500 rounded-2xl p-5 shadow-lg flex items-center gap-5 hover:scale-[1.04] transition-transform"
               >
                 <div className="flex-shrink-0">
                   <img
@@ -202,21 +282,15 @@ const Dashboard = () => {
               {/* LEARN TILE */}
               <Link
                 to="/learn"
-                className="group bg-gradient-to-br from-purple-400 to-indigo-500
-     rounded-2xl p-5 shadow-lg
-     flex items-center gap-5
-     hover:scale-[1.04] transition-transform"
+                className="group bg-gradient-to-br from-purple-400 to-indigo-500 rounded-2xl p-5 shadow-lg flex items-center gap-5 hover:scale-[1.04] transition-transform"
               >
-                {/* LEFT – IMAGE */}
                 <div className="flex-shrink-0">
                   <img
-                    src="/assets/images/learnicon.png" // replace with your learn icon
+                    src="/assets/images/learnicon.png"
                     alt="Learn icon"
                     className="w-40 h-40 object-contain drop-shadow-md group-hover:scale-110 transition-transform"
                   />
                 </div>
-
-                {/* RIGHT – TEXT */}
                 <div className="text-white">
                   <h3 className="text-2xl font-bold flex items-center gap-2">
                     Learn About Hospital
@@ -225,8 +299,6 @@ const Dashboard = () => {
                     Explore and understand your hospital environment!
                   </p>
                 </div>
-
-                {/* HOVER ARROW */}
                 <div className="ml-auto text-white text-2xl opacity-0 group-hover:opacity-100 transition">
                   ➜
                 </div>
@@ -246,17 +318,72 @@ const Dashboard = () => {
 
         {/* RIGHT SIDE – MOOD TILE */}
         <div className="order-last lg:order-none bg-purple-500 rounded-2xl p-6 text-white flex flex-col items-center justify-center">
-          <h3 className="text-xl mb-6 text-center">
-            How are you feeling today?
+          {/* Tile title */}
+          <h3 className="text-2xl font-bold mb-6 text-center">
+            Your Mood Today 🌈
           </h3>
-          <div className="grid grid-cols-2 gap-4 text-3xl">
-            <button>😀</button>
-            <button>🤕</button>
-            <button>😴</button>
-            <button>😡</button>
-            <button>😁</button>
-            <button>🤢</button>
+
+          {/* Error message if mood fetch failed */}
+          {moodError && (
+            <p className="text-red-200 text-sm mb-4 text-center">{moodError}</p>
+          )}
+
+          {/* Mood buttons */}
+          <div className="grid grid-cols-3 gap-5">
+            {moods.map((mood) => {
+              const isSelected = selectedMood?.mood_id === mood.id;
+
+              return (
+                <button
+                  key={mood.id}
+                  onClick={() => handleSelectMood(mood.id)}
+                  title={mood.label}
+                  className={`
+            flex flex-col items-center justify-center
+            p-4 rounded-2xl
+            transition-all duration-200 ease-out
+            focus:outline-none
+            ${
+              isSelected
+                ? "scale-125 bg-white/20 ring-4 ring-white shadow-xl"
+                : "opacity-60 hover:opacity-100 hover:scale-105"
+            }
+          `}
+                >
+                  <img
+                    src={`/assets/images/icons/emoji/${mood.emoji_filename}`}
+                    alt={mood.label}
+                    className="w-16 h-16 object-contain"
+                  />
+
+                  {/* Optional label under emoji */}
+                  <span className="mt-2 text-xs font-semibold">
+                    {mood.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+
+          {/* Encouragement text */}
+          {selectedMood && (
+            <div className="mt-6 text-center bg-white/20 rounded-xl p-4 max-w-xs">
+              <h4 className="font-bold text-lg mb-1">
+                {selectedMood.encouragement_title}
+              </h4>
+              <p className="text-sm leading-relaxed">
+                {selectedMood.encouragement_text}
+              </p>
+            </div>
+          )}
+
+          {/* Optional: Mood streak */}
+          {selectedMood?.streak && (
+            <div className="mt-4 text-yellow-200 font-semibold text-sm text-center">
+              🌟 Mood streak: {selectedMood.streak} day
+              {selectedMood.streak !== 1 ? "s" : ""}
+            </div>
+          )}
         </div>
       </section>
     </main>

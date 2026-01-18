@@ -20,12 +20,14 @@ const loginRoute = require("./routes/login");
 const appointmentsRoute = require("./routes/appointments");
 const buddyRoute = require("./routes/buddies");
 const medicinesRoute = require("./routes/medicines");
+const moodsRoute = require("./routes/moods");
 
 app.use("/register", registerRoute);
 app.use("/login", loginRoute);
 app.use("/api/appointments", appointmentsRoute);
 app.use("/api/medicines", medicinesRoute);
 app.use("/api/buddies", buddyRoute);
+app.use("/api/moods", moodsRoute);
 
 // Static JSON routes
 const games = JSON.parse(

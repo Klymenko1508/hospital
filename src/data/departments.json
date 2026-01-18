@@ -1,0 +1,173 @@
+[
+  {
+    "id": 1,
+    "name": "X-ray",
+    "icon": "/assets/images/departments/xray.png",
+    "content": {
+      "children": [
+        {
+          "type": "text",
+          "text": "X-ray machines take pictures of your bones!"
+        },
+        { "type": "image", "src": "/assets/images/learn/xray_cartoon.png" }
+      ],
+      "teens": [
+        {
+          "type": "text",
+          "text": "X-ray uses radiation to visualize bones and teeth."
+        },
+        { "type": "image", "src": "/assets/images/learn/xray_diagram.png" }
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "name": "MRI",
+    "icon": "/assets/images/departments/mri.png",
+    "content": {
+      "children": [
+        {
+          "type": "text",
+          "text": "MRI takes detailed pictures inside your body!"
+        },
+        { "type": "image", "src": "/assets/images/learn/mri_cartoon.png" }
+      ],
+      "teens": [
+        {
+          "type": "text",
+          "text": "MRI uses strong magnetic fields to image organs and tissues."
+        },
+        { "type": "image", "src": "/assets/images/learn/mri_diagram.png" }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "name": "Surgery",
+    "icon": "/assets/images/departments/surgery.png",
+    "content": {
+      "children": [
+        {
+          "type": "text",
+          "text": "Doctors perform surgery to help patients heal!"
+        },
+        { "type": "image", "src": "/assets/images/learn/surgery_cartoon.png" }
+      ],
+      "teens": [
+        {
+          "type": "text",
+          "text": "Surgery is a medical procedure to repair or remove tissues."
+        },
+        { "type": "image", "src": "/assets/images/learn/surgery_diagram.png" }
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "name": "Wards",
+    "icon": "/assets/images/departments/wards.png",
+    "content": {
+      "children": [
+        {
+          "type": "text",
+          "text": "Wards are rooms where patients rest and recover."
+        },
+        { "type": "image", "src": "/assets/images/learn/wards_cartoon.png" }
+      ],
+      "teens": [
+        {
+          "type": "text",
+          "text": "Wards house patients with similar needs and allow nurses to monitor them."
+        },
+        { "type": "image", "src": "/assets/images/learn/wards_diagram.png" }
+      ]
+    }
+  },
+  {
+    "id": 5,
+    "name": "Play Areas",
+    "icon": "/assets/images/departments/play_area.png",
+    "content": {
+      "children": [
+        {
+          "type": "text",
+          "text": "Play areas help children have fun while in the hospital."
+        },
+        { "type": "image", "src": "/assets/images/learn/play_area_cartoon.png" }
+      ],
+      "teens": [
+        {
+          "type": "text",
+          "text": "Recreational areas promote well-being and reduce stress."
+        },
+        { "type": "image", "src": "/assets/images/learn/play_area_diagram.png" }
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "name": "Pharmacy",
+    "icon": "/assets/images/departments/pharmacy.png",
+    "content": {
+      "children": [
+        {
+          "type": "text",
+          "text": "Pharmacy is where medicines are kept and dispensed."
+        },
+        { "type": "image", "src": "/assets/images/learn/pharmacy_cartoon.png" }
+      ],
+      "teens": [
+        {
+          "type": "text",
+          "text": "Pharmacy stores and dispenses medications safely for patients."
+        },
+        { "type": "image", "src": "/assets/images/learn/pharmacy_diagram.png" }
+      ]
+    }
+  },
+  {
+    "id": 7,
+    "name": "Labs",
+    "icon": "/assets/images/departments/labs.png",
+    "content": {
+      "children": [
+        {
+          "type": "text",
+          "text": "Labs are where doctors check samples like blood and urine."
+        },
+        { "type": "image", "src": "/assets/images/learn/labs_cartoon.png" }
+      ],
+      "teens": [
+        {
+          "type": "text",
+          "text": "Laboratories perform tests to help diagnose and monitor conditions."
+        },
+        { "type": "image", "src": "/assets/images/learn/labs_diagram.png" }
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "name": "Try Being the Doctor",
+    "icon": "/assets/images/departments/doctor.png",
+    "content": {
+      "children": [
+        {
+          "type": "text",
+          "text": "Pretend to be a doctor! Try simple activities like checking a teddy bear patient."
+        },
+        { "type": "image", "src": "/assets/images/learn/doctor_activity.png" }
+      ],
+      "teens": [
+        {
+          "type": "text",
+          "text": "Simulate doctor tasks: check vitals, make notes, and diagnose virtual patients."
+        },
+        {
+          "type": "image",
+          "src": "/assets/images/learn/doctor_activity_teens.png"
+        }
+      ]
+    }
+  }
+]
