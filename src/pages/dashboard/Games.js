@@ -1,5 +1,16 @@
 import React from "react";
 
+/**
+ * Predefined age groups for games
+ * Each group contains:
+ * - id: unique identifier
+ * - title: name of the group
+ * - age: age range
+ * - color: gradient for card background
+ * - image: illustrative icon
+ * - link: external URL to play games
+ * - items: list of sample game types
+ */
 const ageGroups = [
   {
     id: "2-5",
@@ -26,7 +37,12 @@ const ageGroups = [
     color: "from-green-400 to-green-600",
     image: "/assets/images/games/rocket.png",
     link: "https://www.coolmathgames.com/",
-    items: ["Logic puzzles", "Timed quizzes", "Adventure learning", "Help the doctor"],
+    items: [
+      "Logic puzzles",
+      "Timed quizzes",
+      "Adventure learning",
+      "Help the doctor",
+    ],
   },
   {
     id: "13-18",
@@ -39,10 +55,17 @@ const ageGroups = [
   },
 ];
 
+/**
+ * Games page
+ * -------------
+ * Displays interactive cards for different age groups
+ * - Shows image, title, age range, list of sample games
+ * - Each card has a "Play" button linking to external games
+ */
 export default function Games() {
   return (
     <div className="p-6 md:p-8">
-      {/* Заголовок с контроллером 🎮 */}
+      {/* Page header */}
       <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-2 text-blue-500 drop-shadow-md">
         FunZone 🎮
       </h1>
@@ -50,14 +73,14 @@ export default function Games() {
         Choose your age group and start playing!
       </p>
 
-      {/* Карточки */}
+      {/* Grid of game cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {ageGroups.map((group) => (
           <div
             key={group.id}
             className="rounded-3xl shadow-lg transform transition hover:scale-105 overflow-hidden bg-white flex flex-col"
           >
-            {/* Картинка сверху */}
+            {/* Top image section */}
             <div className="w-full h-32 sm:h-36 md:h-40 lg:h-44 flex items-center justify-center bg-gray-100">
               <img
                 src={group.image}
@@ -66,14 +89,18 @@ export default function Games() {
               />
             </div>
 
-            {/* Контент под картинкой */}
+            {/* Card content section */}
             <div
               className={`p-4 sm:p-6 bg-gradient-to-t ${group.color} bg-opacity-80 text-white flex-1 flex flex-col justify-between`}
             >
+              {/* Text info */}
               <div className="flex flex-col items-center text-center">
                 <h2 className="text-sm sm:text-base mb-1">{group.age}</h2>
-                <h3 className="text-lg sm:text-xl font-bold mb-3">{group.title}</h3>
+                <h3 className="text-lg sm:text-xl font-bold mb-3">
+                  {group.title}
+                </h3>
 
+                {/* List of game features */}
                 <ul className="text-sm sm:text-base mb-4 space-y-1">
                   {group.items.map((item) => (
                     <li key={item}>• {item}</li>
@@ -81,8 +108,14 @@ export default function Games() {
                 </ul>
               </div>
 
+              {/* Play button linking to external game */}
               <div className="flex justify-center">
-                <a href={group.link} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                <a
+                  href={group.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto"
+                >
                   <button className="w-full sm:w-auto bg-white text-gray-800 hover:bg-gray-200 px-4 sm:px-6 py-2 rounded-full font-semibold transition">
                     Play
                   </button>

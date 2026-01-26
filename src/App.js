@@ -6,9 +6,11 @@ import {
   Navigate,
 } from "react-router-dom";
 
+// Layout components
 import Sidebar from "./components/Sidebar";
 import MobileHeader from "./components/MobileHeader";
 
+// Pages
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Map from "./pages/Map";
@@ -19,16 +21,25 @@ import Medicines from "./pages/dashboard/Medicines";
 import Learn from "./pages/dashboard/Learn";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // ----------------------------
+  // State
+  // ----------------------------
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // track if user is logged in
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // track mobile sidebar
 
+  // ----------------------------
+  // Check localStorage on mount
+  // ----------------------------
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setIsLoggedIn(true);
+      setIsLoggedIn(true); // user already logged in
     }
   }, []);
 
+  // ----------------------------
+  // Login/Logout handlers
+  // ----------------------------
   const handleLogin = () => {
     setIsLoggedIn(true);
   };
@@ -37,18 +48,18 @@ function App() {
     localStorage.removeItem("user");
     localStorage.removeItem("buddy");
     setIsLoggedIn(false);
-    setIsSidebarOpen(false);
+    setIsSidebarOpen(false); // close sidebar on logout
   };
 
   return (
     <Router>
       <div className="flex min-h-screen">
-        {/* Mobile Header */}
+        {/* Mobile Header – only visible if logged in */}
         {isLoggedIn && (
           <MobileHeader onMenuClick={() => setIsSidebarOpen(true)} />
         )}
 
-        {/* Sidebar */}
+        {/* Sidebar – only visible if logged in */}
         {isLoggedIn && (
           <Sidebar
             isOpen={isSidebarOpen}
@@ -60,12 +71,12 @@ function App() {
         {/* Main Content */}
         <main
           className={`
-    flex-1 min-h-screen
-    ${isLoggedIn ? "pt-14 md:pt-0 md:ml-64" : ""}
-  `}
+            flex-1 min-h-screen
+            ${isLoggedIn ? "pt-14 md:pt-0 md:ml-64" : ""}
+          `}
         >
           <Routes>
-            {/* Root */}
+            {/* Root – redirect depending on login status */}
             <Route
               path="/"
               element={
@@ -77,7 +88,7 @@ function App() {
               }
             />
 
-            {/* Auth */}
+            {/* Auth Routes */}
             <Route
               path="/login"
               element={
@@ -88,18 +99,16 @@ function App() {
                 )
               }
             />
-
             <Route
               path="/register"
               element={isLoggedIn ? <Navigate to="/dashboard" /> : <Register />}
             />
 
-            {/* Protected */}
+            {/* Protected Routes – only accessible if logged in */}
             <Route
               path="/dashboard"
               element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />}
             />
-
             <Route
               path="/games"
               element={isLoggedIn ? <Games /> : <Navigate to="/login" />}
@@ -108,23 +117,20 @@ function App() {
               path="/appointments"
               element={isLoggedIn ? <Appointments /> : <Navigate to="/login" />}
             />
-
             <Route
               path="/medicines"
               element={isLoggedIn ? <Medicines /> : <Navigate to="/login" />}
             />
-
             <Route
               path="/map"
               element={isLoggedIn ? <Map /> : <Navigate to="/login" />}
             />
-
             <Route
               path="/learn"
               element={isLoggedIn ? <Learn /> : <Navigate to="/login" />}
             />
 
-            {/* Fallback */}
+            {/* Fallback – redirect unknown routes */}
             <Route
               path="*"
               element={

@@ -6,22 +6,21 @@ const Dashboard = () => {
   // ----------------------------
   // User & Buddy
   // ----------------------------
-  const [userData, setUserData] = useState(null);
-  const [buddy, setBuddy] = useState(null);
+  const [userData, setUserData] = useState(null); // current user info
+  const [buddy, setBuddy] = useState(null); // user's hospital buddy
 
   // ----------------------------
   // Appointments & Medicines
   // ----------------------------
-  const [nextAppointment, setNextAppointment] = useState(null);
-  const [nextMedicine, setNextMedicine] = useState(null);
+  const [nextAppointment, setNextAppointment] = useState(null); // next appointment
+  const [nextMedicine, setNextMedicine] = useState(null); // next medicine
 
   // ----------------------------
   // MOOD TILE STATE
   // ----------------------------
-  const [moods, setMoods] = useState([]);
-
+  const [moods, setMoods] = useState([]); // available moods
   const [selectedMood, setSelectedMood] = useState(null); // today's selected mood
-  const [moodError, setMoodError] = useState(null); // for catching fetch errors
+  const [moodError, setMoodError] = useState(null); // for mood fetch errors
 
   // ----------------------------
   // Load user and buddy from localStorage
@@ -65,11 +64,11 @@ const Dashboard = () => {
     axios
       .get("http://localhost:5001/api/moods")
       .then((res) => {
-        setMoods(res.data);
+        setMoods(res.data); // store all available moods
       })
       .catch((err) => {
         console.error("Error fetching moods:", err);
-        setMoodError("Cannot load moods");
+        setMoodError("Cannot load moods"); // show error if fetch fails
       });
   }, []);
 
@@ -79,18 +78,16 @@ const Dashboard = () => {
   useEffect(() => {
     if (!userData?.id) return;
 
-    // defensive: use try/catch to prevent breaking if endpoint 404s
     axios
       .get(`http://localhost:5001/api/moods/${userData.id}/today`)
-
       .then((res) => {
         if (res.data) {
-          setSelectedMood(res.data); // set today's mood if exists
+          setSelectedMood(res.data); // set today's mood if it exists
         }
       })
       .catch((err) => {
         if (err.response?.status !== 404) {
-          setMoodError("Cannot load today's mood");
+          setMoodError("Cannot load today's mood"); // ignore 404 (no mood today)
         }
       });
   }, [userData]);
@@ -102,14 +99,14 @@ const Dashboard = () => {
     if (!userData?.id) return;
 
     axios
-      .put(`http://localhost:5001/api/medicines/${id}/take`)
+      .put(`http://localhost:5001/api/medicines/${id}/take`) // mark as taken
       .then(() => {
         setNextMedicine((prev) =>
           prev && prev.id === id ? { ...prev, is_taken: 1 } : prev
         );
         return axios.get(
           `http://localhost:5001/api/medicines/${userData.id}/next`
-        );
+        ); // fetch next medicine
       })
       .then((res) => setNextMedicine(res.data))
       .catch((err) => console.error("Error updating medicine:", err));
@@ -122,26 +119,25 @@ const Dashboard = () => {
     if (!userData?.id) return;
 
     try {
-      // 1️⃣ Save mood for today
+      // save mood for today
       await axios.post(`http://localhost:5001/api/moods/${userData.id}`, {
         mood_id: moodId,
       });
 
-      // 2️⃣ Re-fetch today's mood (full data)
+      // re-fetch today's mood
       const res = await axios.get(
         `http://localhost:5001/api/moods/${userData.id}/today`
       );
 
-      // 3️⃣ Update UI with complete mood info
-      setSelectedMood(res.data);
-      setMoodError(null);
+      setSelectedMood(res.data); // update UI
+      setMoodError(null); // clear error
     } catch (err) {
       console.error("Error updating mood:", err);
       setMoodError("Cannot save mood");
     }
   };
 
-  if (!userData) return <div className="p-6">Loading...</div>;
+  if (!userData) return <div className="p-6">Loading...</div>; // show while loading
 
   return (
     <main className="min-h-screen bg-slate-100 p-4 md:p-8">
@@ -157,7 +153,7 @@ const Dashboard = () => {
                 className="w-40 h-40 object-contain"
               />
             ) : (
-              <div className="w-40 h-40 bg-orange-200 rounded-full" />
+              <div className="w-40 h-40 bg-orange-200 rounded-full" /> // placeholder if no buddy
             )}
 
             <div>

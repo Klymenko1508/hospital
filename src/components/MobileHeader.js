@@ -1,7 +1,22 @@
 import React from "react";
 
+/**
+ * MobileHeader component
+ * ----------------------
+ * A responsive header specifically for mobile devices.
+ * It includes:
+ * - A menu button on the left to open the mobile sidebar/menu
+ * - A centered logo
+ *
+ * Props:
+ * - onMenuClick: function – callback triggered when the menu button is clicked
+ */
 function MobileHeader({ onMenuClick }) {
   return (
+    // Header container
+    // Hidden on medium (md) and larger screens: "md:hidden"
+    // Fixed at the top with full width and z-index for overlay
+    // Flexbox used to center items
     <header
       className="
         md:hidden
@@ -12,16 +27,16 @@ function MobileHeader({ onMenuClick }) {
         shadow
       "
     >
-      {/* Menu button */}
+      {/* Menu button on the left */}
       <button
-        onClick={onMenuClick}
+        onClick={onMenuClick} // Trigger callback to open sidebar/menu
         className="absolute left-4 text-white text-2xl"
-        aria-label="Open menu"
+        aria-label="Open menu" // Accessibility label for screen readers
       >
-        ☰
+        ☰ {/* Hamburger menu icon */}
       </button>
 
-      {/* Center logo */}
+      {/* Centered logo */}
       <img src="/logotype.png" alt="Logo" className="h-8" />
     </header>
   );
