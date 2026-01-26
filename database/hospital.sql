@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 19, 2026 at 09:14 AM
+-- Generation Time: Jan 26, 2026 at 11:36 AM
 -- Server version: 8.0.40
 -- PHP Version: 8.3.14
 
@@ -147,7 +147,7 @@ CREATE TABLE `medicines` (
 --
 
 INSERT INTO `medicines` (`id`, `user_id`, `name`, `dosage`, `time`, `start_date`, `end_date`, `is_taken`, `doctor_id`, `created_at`) VALUES
-(1, 11, 'Paracetamol', '500mg', '23:00:00', '2026-01-18', '2026-02-28', 0, 5, '2026-01-04 22:53:58'),
+(1, 11, 'Paracetamol', '500mg', '23:00:00', '2026-01-18', '2026-02-28', 1, 5, '2026-01-04 22:53:58'),
 (2, 11, 'Amoxicillin', '250mg', '12:00:00', '2026-01-18', '2026-02-28', 1, 5, '2026-01-04 22:53:58'),
 (3, 11, 'Ibuprofen', '200mg', '09:00:00', '2026-02-03', '2026-03-31', 0, 6, '2026-01-04 22:53:58'),
 (4, 11, 'Ibuprofen max', '200mg', '09:00:00', '2026-02-28', '2026-03-31', 0, 5, '2026-01-04 22:53:58');
@@ -229,7 +229,9 @@ CREATE TABLE `user_moods` (
 
 INSERT INTO `user_moods` (`id`, `user_id`, `mood_id`, `mood_date`, `created_at`) VALUES
 (1, 11, 2, '2026-01-18', '2026-01-18 23:39:30'),
-(111, 11, 2, '2026-01-19', '2026-01-19 09:04:27');
+(111, 11, 2, '2026-01-19', '2026-01-19 09:45:28'),
+(117, 11, 2, '2026-01-21', '2026-01-21 14:43:09'),
+(118, 11, 6, '2026-01-26', '2026-01-26 11:35:16');
 
 --
 -- Indexes for dumped tables
@@ -343,7 +345,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_moods`
 --
 ALTER TABLE `user_moods`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
 
 --
 -- Constraints for dumped tables
