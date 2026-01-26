@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 18, 2026 at 01:56 PM
+-- Generation Time: Jan 19, 2026 at 09:14 AM
 -- Server version: 8.0.40
 -- PHP Version: 8.3.14
 
@@ -148,7 +148,7 @@ CREATE TABLE `medicines` (
 
 INSERT INTO `medicines` (`id`, `user_id`, `name`, `dosage`, `time`, `start_date`, `end_date`, `is_taken`, `doctor_id`, `created_at`) VALUES
 (1, 11, 'Paracetamol', '500mg', '23:00:00', '2026-01-18', '2026-02-28', 0, 5, '2026-01-04 22:53:58'),
-(2, 11, 'Amoxicillin', '250mg', '12:00:00', '2026-01-18', '2026-02-28', 0, 5, '2026-01-04 22:53:58'),
+(2, 11, 'Amoxicillin', '250mg', '12:00:00', '2026-01-18', '2026-02-28', 1, 5, '2026-01-04 22:53:58'),
 (3, 11, 'Ibuprofen', '200mg', '09:00:00', '2026-02-03', '2026-03-31', 0, 6, '2026-01-04 22:53:58'),
 (4, 11, 'Ibuprofen max', '200mg', '09:00:00', '2026-02-28', '2026-03-31', 0, 5, '2026-01-04 22:53:58');
 
@@ -174,12 +174,12 @@ CREATE TABLE `moods` (
 --
 
 INSERT INTO `moods` (`id`, `key_name`, `label`, `emoji_filename`, `color`, `encouragement_title`, `encouragement_text`, `created_at`) VALUES
-(1, 'happy', 'Happy', 'beaming.png', 'yellow', 'You’re shining!', 'It’s wonderful to feel happy. Keep smiling!', '2026-01-08 19:18:38'),
-(2, 'silly', 'Silly', 'wink_tongue.png', 'purple', 'That’s fun!', 'Being silly can make the day brighter 😜', '2026-01-08 19:18:38'),
-(3, 'angry', 'Angry', 'steam.png', 'red', 'It’s okay to feel angry', 'Take a deep breath. Big feelings are okay 💛', '2026-01-08 19:18:38'),
-(4, 'confused', 'Confused', 'spiral.png', 'blue', 'You’re not alone', 'Everyone feels confused sometimes. We’ll figure it out together 🤗', '2026-01-08 19:18:38'),
-(5, 'proud', 'Proud', 'halo.png', 'teal', 'You did something great!', 'You should feel proud of yourself ✨', '2026-01-08 19:18:38'),
-(6, 'sad', 'Sad', 'sad.png', 'indigo', 'It’s okay to feel sad', 'Sometimes we feel sad, and that’s okay. You are not alone 💙', '2026-01-08 19:22:01');
+(1, 'overwhelmed', 'Overwhelmed', 'WoozyFace.png', 'blue', 'Let’s slow things 💛\r\n', 'It looks like today feels like a lot. Take a deep breath — you’re doing your best, and that’s enough.\r\n', '2026-01-08 19:18:38'),
+(2, 'silly', 'Silly', 'WinkingFaceWithTongue.png', 'purple', 'That’s fun!', 'Being silly can make the day brighter 😜', '2026-01-08 19:18:38'),
+(3, 'angry', 'Angry', 'FaceWithSteamFromNose.png', 'red', 'It’s okay to feel angry', 'Take a deep breath. Big feelings are okay 💛', '2026-01-08 19:18:38'),
+(4, 'confused', 'Confused', 'FaceWithSpiralEyes.png', 'velvet', 'You’re not alone', 'Everyone feels confused sometimes. We’ll figure it out together 🤗', '2026-01-08 19:18:38'),
+(5, 'proud', 'Proud', 'SmilingFaceWithHalo.png', 'teal', 'You did something great!', 'You should feel proud of yourself ✨', '2026-01-08 19:18:38'),
+(6, 'sad', 'Sad', 'Sad.png', 'indigo', 'It’s okay to feel sad', 'Sometimes we feel sad, and that’s okay. You are not alone 💙', '2026-01-08 19:22:01');
 
 -- --------------------------------------------------------
 
@@ -219,9 +219,17 @@ CREATE TABLE `user_moods` (
   `id` int NOT NULL,
   `user_id` int NOT NULL,
   `mood_id` int NOT NULL,
-  `mood_date` date NOT NULL,
+  `mood_date` date NOT NULL DEFAULT (curdate()),
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `user_moods`
+--
+
+INSERT INTO `user_moods` (`id`, `user_id`, `mood_id`, `mood_date`, `created_at`) VALUES
+(1, 11, 2, '2026-01-18', '2026-01-18 23:39:30'),
+(111, 11, 2, '2026-01-19', '2026-01-19 09:04:27');
 
 --
 -- Indexes for dumped tables
@@ -335,7 +343,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_moods`
 --
 ALTER TABLE `user_moods`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- Constraints for dumped tables
