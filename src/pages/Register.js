@@ -1,23 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 // Function to register a user via API call
 const registerUser = async (userData, navigate) => {
   try {
-    // POST user data to backend
     await axios.post("http://localhost:5001/register", userData);
-    // Redirect to login page after successful registration
-    navigate("/login");
+    navigate("/login"); // Redirect to login on success
   } catch (error) {
-    // Log any errors and show alert
     console.error("Registration error:", error.response?.data || error.message);
     alert("Error during registration. Please try again.");
   }
 };
 
 function Register() {
-  const navigate = useNavigate(); // React Router navigation hook
+  const navigate = useNavigate();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -25,25 +22,12 @@ function Register() {
     surname: "",
     hospital_number: "",
     email: "",
-    department_id: "",
     telephone_number: "",
     password: "",
     confirm_password: "",
   });
 
-  // List of departments fetched from backend
-  const [departments, setDepartments] = useState([]);
-
-  // Fetch departments when component mounts
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      const response = await axios.get("http://localhost:5001/departments");
-      setDepartments(response.data);
-    };
-    fetchDepartments();
-  }, []);
-
-  // Handle input changes for all form fields
+  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -52,16 +36,15 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Exclude confirm_password from payload
     const { password, confirm_password, ...userData } = formData;
 
-    // Validate required fields
+    // Validate all fields
     if (Object.values(formData).some((v) => !v)) {
       alert("Please fill in all fields.");
       return;
     }
 
-    // Validate email format
+    // Validate email
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
       alert("Please enter a valid email.");
       return;
@@ -73,10 +56,10 @@ function Register() {
       return;
     }
 
-    // Include password in final payload
+    // Include password in payload
     userData.password = password;
 
-    // Call register API
+    // Call API
     await registerUser(userData, navigate);
   };
 
@@ -85,7 +68,6 @@ function Register() {
       className="font-[sans-serif] min-h-screen flex items-center justify-center"
       style={{ backgroundColor: "#015CE9" }}
     >
-      {/* Container for the form */}
       <div
         className="max-w-4xl w-full p-8 rounded-2xl shadow"
         style={{ backgroundColor: "#015CE9" }}
@@ -98,14 +80,13 @@ function Register() {
 
         {/* Registration Form */}
         <form className="space-y-6" onSubmit={handleSubmit}>
+          {/* Left-Right Grid Fields */}
           <div className="grid sm:grid-cols-2 gap-4">
-            {/* Dynamically render input fields */}
             {[
               { name: "firstName", label: "First Name" },
               { name: "surname", label: "Surname" },
               { name: "hospital_number", label: "Hospital Number" },
               { name: "email", label: "Email", type: "email" },
-              { name: "telephone_number", label: "Telephone No." },
             ].map((field) => (
               <input
                 key={field.name}
@@ -117,23 +98,22 @@ function Register() {
                 className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
               />
             ))}
+          </div>
 
-            {/* Department dropdown */}
-            <select
-              name="department_id"
-              value={formData.department_id}
+          {/* Telephone centered */}
+          <div className="w-full">
+            <input
+              name="telephone_number"
+              type="text"
+              placeholder="Telephone No."
+              value={formData.telephone_number}
               onChange={handleChange}
-              className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-            >
-              <option value="">Select Department</option>
-              {departments.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
+              className="w-full max-w-md mx-auto text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600 block"
+            />
+          </div>
 
-            {/* Password input */}
+          {/* Passwords in same row */}
+          <div className="grid sm:grid-cols-2 gap-4">
             <input
               name="password"
               type="password"
@@ -142,8 +122,6 @@ function Register() {
               onChange={handleChange}
               className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
             />
-
-            {/* Confirm password input */}
             <input
               name="confirm_password"
               type="password"
@@ -164,7 +142,7 @@ function Register() {
           </button>
         </form>
 
-        {/* Footer with login link */}
+        {/* Footer */}
         <p className="mt-4 text-sm text-center text-white">
           Already have an account?{" "}
           <Link to="/login" className="font-semibold hover:underline">
