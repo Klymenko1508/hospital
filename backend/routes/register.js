@@ -1,26 +1,21 @@
-/**
- * REGISTER ROUTE (Optimized + Fully Commented)
- * --------------------------------------------
- * - Uses MySQL connection pool for performance
- * - Hashes passwords securely with bcrypt
- * - Validates inputs before inserting
- * - Prevents SQL injection with parameterized queries
- * - Handles errors cleanly
- */
-
+// Import Express framework
 const express = require("express");
-const mysql = require("mysql2/promise"); // Use promise-based MySQL for async/await
+
+// Import MySQL promise-based client
+const mysql = require("mysql2/promise");
+
+// Import bcrypt for hashing passwords
 const bcrypt = require("bcrypt");
+
+// Load environment variables
 require("dotenv").config();
 
+// Create Express router
 const router = express.Router();
 
-/**
- * Create a MySQL connection pool
- * --------------------------------
- * Pools allow multiple simultaneous connections
- * and handle reconnections automatically
- */
+/* =========================================================
+   DATABASE CONNECTION POOL
+   ========================================================= */
 const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -29,18 +24,13 @@ const db = mysql.createPool({
   port: process.env.DB_PORT,
 });
 
-/**
- * REGISTER ENDPOINT
- * -----------------
- * Route: POST /register
- * Steps:
- * 1. Validate incoming data
- * 2. Hash the password
- * 3. Insert new user into the database
- * 4. Return success message
- */
+/* =========================================================
+   POST: Register a new user
+   Route: POST /
+   ========================================================= */
 router.post("/", async (req, res) => {
   try {
+    // Extract fields from request body
     const {
       firstName,
       surname,
@@ -52,50 +42,69 @@ router.post("/", async (req, res) => {
       dob,
     } = req.body;
 
-    // Validate required fields
+    /* -------------------------
+       Validate required fields
+       ------------------------- */
     if (!firstName || !surname || !hospital_number || !email || !password) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // Hash the password with 10 salt rounds
+    // Optional: Validate email format
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email address" });
+    }
+
+    /* -------------------------
+       Hash password
+       ------------------------- */
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // SQL query to insert new user safely
+    /* -------------------------
+       Insert user into database
+       ------------------------- */
     const query = `
-      INSERT INTO users 
+      INSERT INTO users
       (firstName, surname, hospital_number, email, department_id, telephone_number, password, dob)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    // Execute query with parameterized values
     await db.query(query, [
       firstName,
       surname,
       hospital_number,
       email,
-      department_id,
-      telephone_number,
+      department_id || null, // allow optional department
+      telephone_number || null, // allow optional telephone
       hashedPassword,
-      dob,
+      dob || null, // allow optional DOB
     ]);
 
-    // Return success response
+    /* -------------------------
+       Return success
+       ------------------------- */
     return res.status(201).json({ message: "Registration successful!" });
   } catch (err) {
     console.error("Registration error:", err);
 
-    // Handle duplicate entries (e.g., email or hospital_number already exists)
+    /* -------------------------
+       Handle duplicates
+       ------------------------- */
     if (err.code === "ER_DUP_ENTRY") {
       return res.status(409).json({
         message: "User with this email or hospital number already exists",
       });
     }
 
-    // Handle other server errors
-    return res
-      .status(500)
-      .json({ message: "Server error during registration" });
+    /* -------------------------
+       Server error
+       ------------------------- */
+    return res.status(500).json({
+      message: "Server error during registration",
+      error: err.message,
+    });
   }
 });
 
+// Export router
 module.exports = router;

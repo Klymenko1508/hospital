@@ -1,63 +1,385 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:8889
+-- Generation Time: Jan 26, 2026 at 11:36 AM
+-- Server version: 8.0.40
+-- PHP Version: 8.3.14
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `hospital`
+--
+
 -- --------------------------------------------------------
--- Database Setup for Hospital Project
+
+--
+-- Table structure for table `appointments`
+--
+
+CREATE TABLE `appointments` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `doctor_id` int DEFAULT NULL,
+  `department` varchar(100) DEFAULT NULL,
+  `location` varchar(150) DEFAULT NULL,
+  `appointment_date` date NOT NULL,
+  `appointment_time` time NOT NULL,
+  `description` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `appointments`
+--
+
+INSERT INTO `appointments` (`id`, `user_id`, `doctor_id`, `department`, `location`, `appointment_date`, `appointment_time`, `description`, `created_at`) VALUES
+(3, 11, 4, 'Children’s Cardiology', 'Building A – Room 203', '2026-01-20', '10:30:00', 'Heart check-up with ultrasound', '2026-01-05 09:17:12'),
+(4, 11, 4, 'Pediatrics', 'Building C – Room 101', '2026-01-22', '14:00:00', 'Regular pediatric follow-up', '2026-01-05 09:17:12'),
+(23, 11, 7, 'Children’s Cardiology', 'Building A – Room 205', '2026-01-24', '10:30:00', 'Heart check-up with ultrasound maybe', '2026-01-05 09:17:12'),
+(24, 11, 4, 'Children’s Cardiology', 'Building hfcycvhA – Room 205', '2026-01-26', '15:00:00', 'Heart check-up with ultrasound maybe', '2026-01-05 09:17:12');
+
 -- --------------------------------------------------------
 
--- Create database (only if it doesn't exist)
-CREATE DATABASE IF NOT EXISTS hospital
-  DEFAULT CHARACTER SET utf8mb4
-  COLLATE utf8mb4_general_ci;
+--
+-- Table structure for table `doctors`
+--
 
-USE hospital;
+CREATE TABLE `doctors` (
+  `id` int NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `specialty` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `doctors`
+--
+
+INSERT INTO `doctors` (`id`, `name`, `specialty`, `created_at`) VALUES
+(4, 'Dr. Emily Carter', 'Pediatrics', '2026-01-04 21:20:07'),
+(5, 'Dr. James Wilson', 'Pediatric Surgery', '2026-01-04 21:20:07'),
+(6, 'Dr. Sofia Martinez', 'Child Psychology', '2026-01-04 21:20:07'),
+(7, 'Dr. Oliver Brown', 'Pediatric Oncology', '2026-01-04 21:20:07'),
+(8, 'Dr. Amelia Green', 'Pediatric Neurology', '2026-01-04 21:20:07'),
+(9, 'Dr. Daniel Lee', 'Pediatric Cardiology', '2026-01-04 21:20:07'),
+(11, 'Dr. John Miller', 'Pediatrics', '2026-01-05 09:15:58');
 
 -- --------------------------------------------------------
--- Users Table
+
+--
+-- Table structure for table `hospital_buddies`
+--
+
+CREATE TABLE `hospital_buddies` (
+  `id` int NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `icon_filename` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `hospital_buddies`
+--
+
+INSERT INTO `hospital_buddies` (`id`, `name`, `icon_filename`) VALUES
+(1, 'Bear', 'bear.png'),
+(2, 'Tiger', 'tiger.png'),
+(3, 'Dog', 'dog.png'),
+(4, 'Fox', 'fox.png'),
+(5, 'Owl', 'owl.png'),
+(6, 'Lion', 'lion.png'),
+(7, 'Panda', 'panda.png'),
+(8, 'Rabbit', 'rabbit.png');
+
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `firstName` VARCHAR(50) NOT NULL,
-  `surname` VARCHAR(50) NOT NULL,
-  `dob` DATE DEFAULT NULL,
-  `hospital_number` VARCHAR(20) DEFAULT NULL,
-  `email` VARCHAR(100) NOT NULL UNIQUE,
-  `department_id` INT(11) DEFAULT NULL,
-  `telephone_number` VARCHAR(15) DEFAULT NULL,
-  `password` VARCHAR(255) NOT NULL,
-  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_general_ci;
+--
+-- Table structure for table `locations`
+--
 
--- (Optional) Insert initial admin user
--- Uncomment this if you want a starting user
-/*
-INSERT INTO `users` (`firstName`, `surname`, `email`, `password`)
-VALUES ('Admin', 'User', 'admin@example.com', 'hashed_password_here');
-*/
+CREATE TABLE `locations` (
+  `id` int NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `type` enum('ward','lab','imaging','rehab') DEFAULT 'ward',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `locations`
+--
 
-INSERT INTO `users` 
-(`id`, `firstName`, `surname`, `dob`, `hospital_number`, `email`, `department_id`, `telephone_number`, `password`, `created_at`) 
-VALUES
-(1, 'Aiden', 'Clark', '2010-04-12', 'KID100001', 'aiden.clark@example.com', 1, '0711111111', '$2b$10$1v0x5c8WcY8fP7Ek2e1S0uHcPe1PN3t3TK0hQbsSYFJXQouKEGfOe', NOW()),
+INSERT INTO `locations` (`id`, `name`, `type`, `created_at`) VALUES
+(1, 'Ward 4', 'ward', '2025-12-17 13:53:14'),
+(2, 'Radiology Dept', 'imaging', '2025-12-17 13:53:14'),
+(3, 'Lab Room 2', 'lab', '2025-12-17 13:53:14');
 
-(2, 'Bella', 'Sanders', '2011-08-23', 'KID100002', 'bella.sanders@example.com', 2, '0711111112', '$2b$10$1v0x5c8WcY8fP7Ek2e1S0uHcPe1PN3t3TK0hQbsSYFJXQouKEGfOe', NOW()),
+-- --------------------------------------------------------
 
-(3, 'Caleb', 'Wright', '2009-12-05', 'KID100003', 'caleb.wright@example.com', 3, '0711111113', '$2b$10$1v0x5c8WcY8fP7Ek2e1S0uHcPe1PN3t3TK0hQbsSYFJXQouKEGfOe', NOW()),
+--
+-- Table structure for table `medicines`
+--
 
-(4, 'Daisy', 'Mitchell', '2012-03-17', 'KID100004', 'daisy.mitchell@example.com', 1, '0711111114', '$2b$10$1v0x5c8WcY8fP7Ek2e1S0uHcPe1PN3t3TK0hQbsSYFJXQouKEGfOe', NOW()),
+CREATE TABLE `medicines` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `dosage` varchar(50) NOT NULL,
+  `time` time NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `is_taken` tinyint(1) DEFAULT '0',
+  `doctor_id` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-(5, 'Ethan', 'Harris', '2010-07-29', 'KID100005', 'ethan.harris@example.com', 4, '0711111115', '$2b$10$1v0x5c8WcY8fP7Ek2e1S0uHcPe1PN3t3TK0hQbsSYFJXQouKEGfOe', NOW()),
+--
+-- Dumping data for table `medicines`
+--
 
-(6, 'Freya', 'Stevens', '2011-02-14', 'KID100006', 'freya.stevens@example.com', 2, '0711111116', '$2b$10$1v0x5c8WcY8fP7Ek2e1S0uHcPe1PN3t3TK0hQbsSYFJXQouKEGfOe', NOW()),
+INSERT INTO `medicines` (`id`, `user_id`, `name`, `dosage`, `time`, `start_date`, `end_date`, `is_taken`, `doctor_id`, `created_at`) VALUES
+(1, 11, 'Paracetamol', '500mg', '23:00:00', '2026-01-18', '2026-02-28', 1, 5, '2026-01-04 22:53:58'),
+(2, 11, 'Amoxicillin', '250mg', '12:00:00', '2026-01-18', '2026-02-28', 1, 5, '2026-01-04 22:53:58'),
+(3, 11, 'Ibuprofen', '200mg', '09:00:00', '2026-02-03', '2026-03-31', 0, 6, '2026-01-04 22:53:58'),
+(4, 11, 'Ibuprofen max', '200mg', '09:00:00', '2026-02-28', '2026-03-31', 0, 5, '2026-01-04 22:53:58');
 
-(7, 'Gabriel', 'Hunter', '2008-09-09', 'KID100007', 'gabriel.hunter@example.com', 3, '0711111117', '$2b$10$1v0x5c8WcY8fP7Ek2e1S0uHcPe1PN3t3TK0hQbsSYFJXQouKEGfOe', NOW()),
+-- --------------------------------------------------------
 
-(8, 'Holly', 'Murray', '2009-05-31', 'KID100008', 'holly.murray@example.com', 1, '0711111118', '$2b$10$1v0x5c8WcY8fP7Ek2e1S0uHcPe1PN3t3TK0hQbsSYFJXQouKEGfOe', NOW()),
+--
+-- Table structure for table `moods`
+--
 
-(9, 'Isaac', 'Ford', '2012-10-21', 'KID100009', 'isaac.ford@example.com', 4, '0711111119', '$2b$10$1v0x5c8WcY8fP7Ek2e1S0uHcPe1PN3t3TK0hQbsSYFJXQouKEGfOe', NOW()),
+CREATE TABLE `moods` (
+  `id` int NOT NULL,
+  `key_name` varchar(50) NOT NULL,
+  `label` varchar(50) NOT NULL,
+  `emoji_filename` varchar(100) NOT NULL,
+  `color` varchar(50) DEFAULT NULL,
+  `encouragement_title` varchar(100) NOT NULL,
+  `encouragement_text` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-(10, 'Jasmine', 'Reed', '2010-01-08', 'KID100010', 'jasmine.reed@example.com', 2, '0711111120', '$2b$10$1v0x5c8WcY8fP7Ek2e1S0uHcPe1PN3t3TK0hQbsSYFJXQouKEGfOe', NOW());
+--
+-- Dumping data for table `moods`
+--
 
+INSERT INTO `moods` (`id`, `key_name`, `label`, `emoji_filename`, `color`, `encouragement_title`, `encouragement_text`, `created_at`) VALUES
+(1, 'overwhelmed', 'Overwhelmed', 'WoozyFace.png', 'blue', 'Let’s slow things 💛\r\n', 'It looks like today feels like a lot. Take a deep breath — you’re doing your best, and that’s enough.\r\n', '2026-01-08 19:18:38'),
+(2, 'silly', 'Silly', 'WinkingFaceWithTongue.png', 'purple', 'That’s fun!', 'Being silly can make the day brighter 😜', '2026-01-08 19:18:38'),
+(3, 'angry', 'Angry', 'FaceWithSteamFromNose.png', 'red', 'It’s okay to feel angry', 'Take a deep breath. Big feelings are okay 💛', '2026-01-08 19:18:38'),
+(4, 'confused', 'Confused', 'FaceWithSpiralEyes.png', 'velvet', 'You’re not alone', 'Everyone feels confused sometimes. We’ll figure it out together 🤗', '2026-01-08 19:18:38'),
+(5, 'proud', 'Proud', 'SmilingFaceWithHalo.png', 'teal', 'You did something great!', 'You should feel proud of yourself ✨', '2026-01-08 19:18:38'),
+(6, 'sad', 'Sad', 'Sad.png', 'indigo', 'It’s okay to feel sad', 'Sometimes we feel sad, and that’s okay. You are not alone 💙', '2026-01-08 19:22:01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int NOT NULL,
+  `firstName` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `surname` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `dob` date DEFAULT NULL,
+  `hospital_number` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `department_id` int DEFAULT NULL,
+  `telephone_number` varchar(15) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `doctor_id` int DEFAULT NULL,
+  `location_id` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `firstName`, `surname`, `dob`, `hospital_number`, `email`, `department_id`, `telephone_number`, `password`, `created_at`, `doctor_id`, `location_id`) VALUES
+(11, 'Nataliia', 'Yareshko', '1993-01-19', 'nata', 'n@gmail.com', 1, '777777777', '$2b$10$OUnOunUB/rum5pbiTO4a8Oift0BK8EzaCSrn4/QWj8x7MzazgfJGm', '2025-12-09 21:16:27', 4, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_moods`
+--
+
+CREATE TABLE `user_moods` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `mood_id` int NOT NULL,
+  `mood_date` date NOT NULL DEFAULT (curdate()),
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `user_moods`
+--
+
+INSERT INTO `user_moods` (`id`, `user_id`, `mood_id`, `mood_date`, `created_at`) VALUES
+(1, 11, 2, '2026-01-18', '2026-01-18 23:39:30'),
+(111, 11, 2, '2026-01-19', '2026-01-19 09:45:28'),
+(117, 11, 2, '2026-01-21', '2026-01-21 14:43:09'),
+(118, 11, 6, '2026-01-26', '2026-01-26 11:35:16');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `appointments`
+--
+ALTER TABLE `appointments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_appointments_user` (`user_id`),
+  ADD KEY `fk_appointments_doctor` (`doctor_id`);
+
+--
+-- Indexes for table `doctors`
+--
+ALTER TABLE `doctors`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `hospital_buddies`
+--
+ALTER TABLE `hospital_buddies`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `locations`
+--
+ALTER TABLE `locations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `medicines`
+--
+ALTER TABLE `medicines`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `doctor_id` (`doctor_id`);
+
+--
+-- Indexes for table `moods`
+--
+ALTER TABLE `moods`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `key_name` (`key_name`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `fk_user_doctor` (`doctor_id`),
+  ADD KEY `fk_user_location` (`location_id`);
+
+--
+-- Indexes for table `user_moods`
+--
+ALTER TABLE `user_moods`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_user_mood_per_day` (`user_id`,`mood_date`),
+  ADD KEY `fk_user_moods_mood` (`mood_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `appointments`
+--
+ALTER TABLE `appointments`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT for table `doctors`
+--
+ALTER TABLE `doctors`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `hospital_buddies`
+--
+ALTER TABLE `hospital_buddies`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `locations`
+--
+ALTER TABLE `locations`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `medicines`
+--
+ALTER TABLE `medicines`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `moods`
+--
+ALTER TABLE `moods`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `user_moods`
+--
+ALTER TABLE `user_moods`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `appointments`
+--
+ALTER TABLE `appointments`
+  ADD CONSTRAINT `fk_appointments_doctor` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_appointments_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `medicines`
+--
+ALTER TABLE `medicines`
+  ADD CONSTRAINT `medicines_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `medicines_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `fk_user_doctor` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`),
+  ADD CONSTRAINT `fk_user_location` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`);
+
+--
+-- Constraints for table `user_moods`
+--
+ALTER TABLE `user_moods`
+  ADD CONSTRAINT `fk_user_moods_mood` FOREIGN KEY (`mood_id`) REFERENCES `moods` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_moods_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -73,3 +73,13 @@
 .p-4 {
   padding: 1rem;
 }
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.animate-dash {
+  animation: dash 1.5s linear infinite;
+}
